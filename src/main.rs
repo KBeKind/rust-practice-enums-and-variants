@@ -89,6 +89,7 @@ enum WineGrapes {
     Grape2,
     Grape3,
     Grape4,
+    Grape5,
 }
 
 fn taste_wine(grapes: WineGrapes) {
@@ -194,6 +195,7 @@ fn main() {
 
 
     taste_wine(WineGrapes::Grape1);
-    taste_wine(WineGrapes::Grape4)
+    taste_wine(WineGrapes::Grape2);
+    taste_wine(WineGrapes::Grape5);
 
 }
