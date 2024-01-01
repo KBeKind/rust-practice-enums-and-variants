@@ -1,4 +1,4 @@
-use std::mem::discriminant;
+use std::{mem::discriminant, result, fs::File};
 
 
 
@@ -31,6 +31,53 @@ fn supported_regions(wine_region: WineRegions) {
         _ => println!("this region is not acceptable")
     }
 }
+
+
+fn divide(x: i32, y: i32) -> Option<i32> {
+    if y == 0 {
+        // THIS IS VALID BECAUSE IS IS THE OTHER VARIANT OF Option
+        None
+    } else {
+        // CREATES THE Option<i32> VALUE.  Some() CREATES A NEW INSTANCE OF Option
+        Some(x / y)
+    }
+}
+
+
+enum FileSize {
+    Bytes(u64),
+    KiloBytes(u64),
+    MegaBytes(u64),
+    GigaBytes(u64),
+}
+
+impl FileSize {
+    fn format_size(&self) -> String {
+        match self {
+            FileSize::Bytes(bytes) => format!("{} bytes", bytes),
+            FileSize::KiloBytes(kb) => format!("{} KB", kb),
+            FileSize::MegaBytes(mb) => format!("{} MB", mb),
+            FileSize::GigaBytes(gb) => format!("{} GB", gb),
+        }
+    }
+}
+
+fn format_size2(size: u64) -> String {
+    let filesize: FileSize = match size {
+        0..=999 => FileSize::Bytes(size),
+        1000..=999_999 => FileSize::KiloBytes(size / 1000),
+        1_000_000..=999_999_999 => FileSize::MegaBytes(size / 1_000_000),
+        _ => FileSize::GigaBytes(size / 1_000_000_000),
+    };
+
+    match filesize {
+        FileSize::Bytes(bytes) => format!("{} bytes", bytes),
+        FileSize::KiloBytes(kb) => format!("{:.2} KB", kb as f64 / 1000.0),
+        FileSize::MegaBytes(mb) => format!("{:.2} MB", mb as f64 / 1000.0),
+        FileSize::GigaBytes(gb) => format!("{:.2} GB", gb as f64 / 1000.0),
+    }
+}
+
 
 
 fn main() {
@@ -72,6 +119,41 @@ fn main() {
     supported_regions(wine3.region);
     supported_regions(WineRegions::Region4);
 
+
+    let a: i32 = 10;
+    let b: i32 = 2;
+
+    let result: Option<i32> = divide(a, b);
+    let result2: Option<i32> = divide(a, 0);
+
+    println!("unwrapped option: {:?}", result.unwrap());
+    // CANT UNWRAP A NONE, THE LINE BELOW WILL CAUSE A PANIC
+    // println!("{:?}", result2.unwrap());
+
+    match result  {
+        Some(x) => println!("{}", x),
+        None => println!("Cannot divide by zero")
+    }
+
+    match result2 {
+        Some(x) => println!("{}", x),
+        None => println!("Cannot divide by zero")
+    }
+
+
+    // let result = format_size(68880000837399);
+    // println!("{}", result);
+
+
+    let size = 2_000_000; // 2 million bytes, which should be 2 MB
+    let filesize = match size {
+        0..=999 => FileSize::Bytes(size),
+        1000..=999_999 => FileSize::KiloBytes(size / 1000),
+        1_000_000..=999_999_999 => FileSize::MegaBytes(size / 1_000_000),
+        _ => FileSize::GigaBytes(size / 1_000_000_000)
+    };
+
+    println!("FileSize: {}", filesize.format_size());
 
 
 }
