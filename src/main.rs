@@ -78,6 +78,27 @@ fn format_size2(size: u64) -> String {
     }
 }
 
+enum Shape {
+    Circle(f64),
+    Square(f64),
+}
+
+
+enum WineGrapes {
+    Grape1,
+    Grape2,
+    Grape3,
+    Grape4,
+}
+
+fn taste_wine(grapes: WineGrapes) {
+    match grapes {
+        WineGrapes::Grape1 => println!("taste grape 1"),
+        WineGrapes::Grape2 => println!("taste grape 2"),
+        WineGrapes::Grape3 => println!("taste grape 3"),
+        _ => println!("taste other grape type")
+    }
+}
 
 
 fn main() {
@@ -155,5 +176,24 @@ fn main() {
 
     println!("FileSize: {}", filesize.format_size());
 
+
+    // ENUMS WITH VECTORS
+
+    let shapes: Vec<Shape> = vec![Shape::Circle(10.0), Shape::Square(5.0)];
+
+    let total_area: f64 = shapes
+    // ITER AND MAP WORK TOGETHER TO REPLACE A LOOP IN THIS CASE
+    .iter()
+    .map(|shape: &Shape| match shape {
+        Shape::Circle(radius) => std::f64::consts::PI  * radius * radius,
+        Shape::Square(side) => side * side,
+    })
+    .sum();
+
+    println!("Total area of the vector shapes: {} sq. units", total_area);
+
+
+    taste_wine(WineGrapes::Grape1);
+    taste_wine(WineGrapes::Grape4)
 
 }
